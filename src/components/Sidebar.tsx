@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Calendar, Heart, FileText, ShoppingCart, Brain, X } from 'lucide-react';
+import { Home, Calendar, Heart, FileText, ShoppingCart, Brain, X, Hospital } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface SidebarProps {
@@ -32,6 +32,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       color: 'text-red-500'
     },
     { 
+      id: 'hospitals', 
+      icon: Hospital, 
+      label: language === 'en' ? 'Find Hospitals' : 'अस्पताल खोज्नुहोस्',
+      color: 'text-teal-600'
+    },
+    { 
       id: 'doctors', 
       icon: Calendar, 
       label: language === 'en' ? 'Book Doctor' : 'डाक्टर बुक गर्नुहोस्',
@@ -59,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       id: 'wellness', 
       icon: Brain, 
       label: language === 'en' ? 'Wellness Tips' : 'स्वास्थ्य सुझाव',
-      color: 'text-teal-600'
+      color: 'text-emerald-600'
     },
   ];
 
@@ -82,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-4 border-b border-gray-100 lg:hidden">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-sm">स्</span>
               </div>
               <h2 className="font-bold text-lg">Swasthya Setu</h2>
@@ -108,12 +114,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                 className={`
                   w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                   ${isActive 
-                    ? 'bg-blue-50 text-blue-700 shadow-sm' 
+                    ? 'bg-teal-50 text-teal-700 shadow-sm' 
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }
                 `}
               >
-                <Icon className={`h-5 w-5 ${isActive ? 'text-blue-600' : item.color}`} />
+                <Icon className={`h-5 w-5 ${isActive ? 'text-teal-600' : item.color}`} />
                 <span className="font-medium">{item.label}</span>
               </button>
             );

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Heart, Calendar, FileText, ShoppingCart, Brain, Zap } from 'lucide-react';
+import { Heart, Calendar, FileText, ShoppingCart, Brain, Zap, Hospital } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface HomeScreenProps {
@@ -18,6 +18,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSectionChange, language, user
       subtitle: language === 'en' ? 'AI-powered symptom analysis' : 'AI-संचालित लक्षण विश्लेषण',
       gradient: 'from-red-400 to-pink-500',
       bgColor: 'bg-red-50'
+    },
+    {
+      id: 'hospitals',
+      icon: Hospital,
+      title: language === 'en' ? 'Find Hospitals' : 'अस्पताल खोज्नुहोस्',
+      subtitle: language === 'en' ? 'Book hospital tickets online' : 'अनलाइन अस्पताल टिकट बुक गर्नुहोस्',
+      gradient: 'from-teal-400 to-cyan-500',
+      bgColor: 'bg-teal-50'
     },
     {
       id: 'doctors',
@@ -56,8 +64,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSectionChange, language, user
       icon: Brain,
       title: language === 'en' ? 'Wellness Tips' : 'स्वास्थ्य सुझाव',
       subtitle: language === 'en' ? 'Personalized health advice' : 'व्यक्तिगत स्वास्थ्य सल्लाह',
-      gradient: 'from-teal-400 to-cyan-500',
-      bgColor: 'bg-teal-50'
+      gradient: 'from-emerald-400 to-teal-500',
+      bgColor: 'bg-emerald-50'
     },
   ];
 
@@ -66,11 +74,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSectionChange, language, user
       {/* Welcome Section */}
       <div className="mb-8 text-center">
         <div className="relative inline-block">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 via-green-600 to-orange-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent mb-2">
             {language === 'en' ? `Welcome back, ${userName}! 👋` : `स्वागत छ, ${userName}! 👋`}
           </h1>
           <div className="absolute -top-2 -right-2">
-            <div className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
+            <div className="w-4 h-4 bg-gradient-to-r from-teal-400 to-cyan-500 rounded-full animate-pulse"></div>
           </div>
         </div>
         <p className="text-gray-600 text-lg">
@@ -83,10 +91,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSectionChange, language, user
 
       {/* Quick AI Assistant */}
       <div className="mb-8">
-        <Card className="health-card border-2 border-dashed border-blue-200 hover:border-blue-300 transition-colors">
+        <Card className="health-card border-2 border-dashed border-teal-200 hover:border-teal-300 transition-colors">
           <CardContent className="p-6">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-full flex items-center justify-center">
                 <Zap className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -103,7 +111,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSectionChange, language, user
             </div>
             <button
               onClick={() => onSectionChange('symptoms')}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-xl font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+              className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-3 px-6 rounded-xl font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
             >
               {language === 'en' ? 'Start Conversation 💬' : 'कुराकानी सुरु गर्नुहोस् 💬'}
             </button>
@@ -151,14 +159,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSectionChange, language, user
         
         <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-blue-600 text-lg">📅</span>
+            <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
+              <span className="text-teal-600 text-lg">📅</span>
             </div>
             <div>
               <p className="text-sm text-gray-600">
                 {language === 'en' ? 'Next Appointment' : 'अर्को अपोइन्टमेन्ट'}
               </p>
-              <p className="font-bold text-blue-600">Dec 15</p>
+              <p className="font-bold text-teal-600">Dec 15</p>
             </div>
           </div>
         </div>

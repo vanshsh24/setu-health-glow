@@ -6,6 +6,7 @@ import HomeScreen from '../components/HomeScreen';
 import SymptomChecker from '../components/SymptomChecker';
 import DoctorBooking from '../components/DoctorBooking';
 import WellnessScreen from '../components/WellnessScreen';
+import HospitalScreen from '../components/HospitalScreen';
 import UserProfile from '../components/auth/UserProfile';
 import { useAuth } from '../hooks/useAuth';
 
@@ -35,6 +36,8 @@ const Index = () => {
         return <HomeScreen onSectionChange={setActiveSection} language={language} userName={userName} />;
       case 'symptoms':
         return <SymptomChecker language={language} />;
+      case 'hospitals':
+        return <HospitalScreen language={language} />;
       case 'doctors':
         return <DoctorBooking language={language} />;
       case 'profile':
@@ -89,7 +92,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50">
       <div className="flex h-screen">
         <Sidebar 
           isOpen={sidebarOpen}
