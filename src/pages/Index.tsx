@@ -6,13 +6,16 @@ import HomeScreen from '../components/HomeScreen';
 import SymptomChecker from '../components/SymptomChecker';
 import DoctorBooking from '../components/DoctorBooking';
 import WellnessScreen from '../components/WellnessScreen';
+import UserProfile from '../components/auth/UserProfile';
+import { useAuth } from '../hooks/useAuth';
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [language, setLanguage] = useState<'en' | 'np'>('en');
+  const { user, profile } = useAuth();
   
-  const userName = "Aashish"; // This would typically come from user authentication
+  const userName = profile?.full_name || user?.email?.split('@')[0] || "Guest";
 
   const handleMenuClick = () => {
     setSidebarOpen(true);
@@ -34,6 +37,8 @@ const Index = () => {
         return <SymptomChecker language={language} />;
       case 'doctors':
         return <DoctorBooking language={language} />;
+      case 'profile':
+        return <UserProfile language={language} />;
       case 'lab':
         return (
           <div className="p-6 text-center">
