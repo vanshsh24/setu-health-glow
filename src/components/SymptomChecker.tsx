@@ -171,7 +171,7 @@ const SymptomChecker: React.FC<SymptomCheckerProps> = ({ language }) => {
                   : 'आफ्ना लक्षणहरू वर्णन गर्नुहोस्...'
               }
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              className="flex-1 border-gray-200 focus:border-blue-400 rounded-xl"
+              className="flex-1 border-gray-200 focus:border-[#60c4b3] rounded-xl"
             />
             <Button
               variant="ghost"
@@ -183,7 +183,7 @@ const SymptomChecker: React.FC<SymptomCheckerProps> = ({ language }) => {
             <Button
               onClick={handleSendMessage}
               disabled={!currentMessage.trim() || isTyping}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl px-6"
+              className="primary-button px-6"
             >
               <Send className="h-4 w-4" />
             </Button>

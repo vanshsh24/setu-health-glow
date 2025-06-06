@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
@@ -9,6 +8,7 @@ import WellnessScreen from '../components/WellnessScreen';
 import HospitalScreen from '../components/HospitalScreen';
 import UserProfile from '../components/auth/UserProfile';
 import { useAuth } from '../hooks/useAuth';
+import ChatWidget from '../components/ChatBot/ChatWidget';
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -92,7 +92,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-[#eaf6fb] via-[#f0f9ff] to-white">
       <div className="flex h-screen">
         <Sidebar 
           isOpen={sidebarOpen}
@@ -114,6 +114,9 @@ const Index = () => {
           </main>
         </div>
       </div>
+
+      {/* Chat Widget */}
+      <ChatWidget language={language} />
     </div>
   );
 };

@@ -55,11 +55,11 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital, language, onBookT
             <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
               <MapPin className="h-4 w-4" />
               <span>{hospital.address}</span>
-              <span className="text-teal-600 font-medium">• {hospital.distance} {t.km}</span>
+              <span className="text-[#60c4b3] font-medium">• {hospital.distance} {t.km}</span>
             </div>
             <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
               <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                <Star className="h-4 w-4 text-[#60c4b3] fill-current" />
                 <span className="font-medium">{hospital.rating}</span>
               </div>
               <div className="flex items-center gap-1">
@@ -76,7 +76,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital, language, onBookT
             {hospital.specialties.slice(0, 3).map((specialty, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-teal-50 text-teal-700 text-xs rounded-full font-medium"
+                className="px-2 py-1 bg-[#60c4b3]/10 text-[#60c4b3] text-xs rounded-full font-medium"
               >
                 {specialty}
               </span>
@@ -95,14 +95,14 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital, language, onBookT
             </div>
             <div className="text-right">
               <div className="text-gray-500 text-xs">{t.consultationFee}</div>
-              <div className="text-teal-600 font-bold">Rs. {hospital.consultationFee}</div>
+              <div className="text-[#60c4b3] font-bold">Rs. {hospital.consultationFee}</div>
             </div>
           </div>
         </div>
 
         <Button
           onClick={() => onBookTicket(hospital)}
-          className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-medium py-2.5 rounded-xl transition-all duration-300"
+          className="w-full primary-button"
         >
           <Calendar className="h-4 w-4 mr-2" />
           {t.bookTicket}
