@@ -152,9 +152,9 @@ const TicketConfirmation: React.FC<TicketConfirmationProps> = ({
             </div>
           </div>
 
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6">
-            <h4 className="font-medium text-yellow-800 mb-2">{t.importantNote}</h4>
-            <ul className="text-sm text-yellow-700 space-y-1">
+          <div className="info-highlight rounded-lg p-3 mb-6">
+            <h4 className="font-medium mb-2">{t.importantNote}</h4>
+            <ul className="text-sm space-y-1">
               <li>• {t.arriveEarly}</li>
               <li>• {t.bringId}</li>
             </ul>
