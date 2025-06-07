@@ -1,14 +1,30 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter, MapPin, Hospital } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import HospitalCard from './HospitalCard';
 import HospitalBookingForm from './HospitalBookingForm';
 import TicketConfirmation from './TicketConfirmation';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface HospitalScreenProps {
   language: 'en' | 'np';
+}
+
+interface Institution {
+  id: string;
+  name: string;
+  nameNepali?: string;
+  location: string;
+  city: string;
+  district: string;
+  contact_email: string;
+  contact_phone: string;
+  services_description: string;
+  institution_type: 'hospital' | 'pathology_lab';
+  is_active: boolean;
 }
 
 const HospitalScreen: React.FC<HospitalScreenProps> = ({ language }) => {
@@ -17,6 +33,9 @@ const HospitalScreen: React.FC<HospitalScreenProps> = ({ language }) => {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [bookingData, setBookingData] = useState<any>(null);
+  const [institutions, setInstitutions] = useState<Institution[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   const text = {
     en: {
@@ -41,63 +60,65 @@ const HospitalScreen: React.FC<HospitalScreenProps> = ({ language }) => {
 
   const t = text[language];
 
-  const sampleHospitals = [
-    {
-      id: '1',
-      name: 'Tribhuvan University Teaching Hospital',
-      nameNepali: 'त्रिभुवन विश्वविद्यालय शिक्षण अस्पताल',
-      address: 'Maharajgunj, Kathmandu',
-      specialties: ['Cardiology', 'Neurology', 'Pediatrics', 'Emergency'],
-      rating: 4.5,
-      openHours: '24/7',
-      doctorsAvailable: 45,
-      distance: '2.3',
-      consultationFee: 1500
-    },
-    {
-      id: '2',
-      name: 'Norvic International Hospital',
-      nameNepali: 'नर्भिक अन्तर्राष्ट्रिय अस्पताल',
-      address: 'Thapathali, Kathmandu',
-      specialties: ['Orthopedics', 'Dermatology', 'General Medicine'],
-      rating: 4.3,
-      openHours: '6:00 AM - 10:00 PM',
-      doctorsAvailable: 32,
-      distance: '3.1',
-      consultationFee: 2000
-    },
-    {
-      id: '3',
-      name: 'B&B Hospital',
-      nameNepali: 'बी एण्ड बी अस्पताल',
-      address: 'Gwarko, Lalitpur',
-      specialties: ['Gastroenterology', 'Pulmonology', 'Oncology'],
-      rating: 4.2,
-      openHours: '24/7',
-      doctorsAvailable: 28,
-      distance: '4.7',
-      consultationFee: 1800
-    },
-    {
-      id: '4',
-      name: 'Grande International Hospital',
-      nameNepali: 'ग्रान्डे अन्तर्राष्ट्रिय अस्पताल',
-      address: 'Dhapasi, Kathmandu',
-      specialties: ['Emergency', 'ICU', 'Surgery', 'Radiology'],
-      rating: 4.4,
-      openHours: '24/7',
-      doctorsAvailable: 38,
-      distance: '5.2',
-      consultationFee: 2200
-    }
-  ];
+  useEffect(() => {
+    fetchInstitutions();
+  }, []);
 
-  const filteredHospitals = sampleHospitals.filter(hospital =>
-    hospital.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    hospital.nameNepali.includes(searchQuery) ||
-    hospital.specialties.some(specialty => 
-      specialty.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+  const fetchInstitutions = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('approved_institutions')
+        .select('*')
+        .eq('is_active', true)
+        .eq('institution_type', 'hospital');
+
+      if (error) {
+        console.error('Error fetching institutions:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load hospitals. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setInstitutions(data || []);
+    } catch (error) {
+      console.error('Error fetching institutions:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load hospitals. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatInstitutionForCard = (institution: Institution) => {
+    return {
+      id: institution.id,
+      name: institution.name,
+      nameNepali: institution.name, // You might want to add a nepali_name field
+      address: `${institution.location}, ${institution.city}`,
+      specialties: institution.services_description.split(',').map(s => s.trim()).slice(0, 3),
+      rating: 4.0 + Math.random() * 0.5, // Random rating for demo
+      openHours: '24/7', // Default for demo
+      doctorsAvailable: Math.floor(Math.random() * 50) + 20, // Random for demo
+      distance: (Math.random() * 10 + 1).toFixed(1), // Random distance for demo
+      consultationFee: Math.floor(Math.random() * 1000) + 1500, // Random fee for demo
+      contact_phone: institution.contact_phone,
+      contact_email: institution.contact_email,
+      city: institution.city,
+      district: institution.district
+    };
+  };
+
+  const filteredInstitutions = institutions.filter(institution =>
+    institution.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    institution.services_description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    institution.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    institution.district.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleBookTicket = (hospital: any) => {
@@ -117,6 +138,14 @@ const HospitalScreen: React.FC<HospitalScreenProps> = ({ language }) => {
     setSelectedHospital(null);
     setBookingData(null);
   };
+
+  if (loading) {
+    return (
+      <div className="p-6 max-w-6xl mx-auto">
+        <div className="text-center">Loading hospitals...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -158,7 +187,7 @@ const HospitalScreen: React.FC<HospitalScreenProps> = ({ language }) => {
                   <Hospital className="h-4 w-4 text-teal-600" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-teal-600">{sampleHospitals.length}</div>
+                  <div className="text-2xl font-bold text-teal-600">{filteredInstitutions.length}</div>
                   <div className="text-sm text-gray-600">Hospitals Available</div>
                 </div>
               </div>
@@ -184,7 +213,7 @@ const HospitalScreen: React.FC<HospitalScreenProps> = ({ language }) => {
                   <span className="text-blue-600 text-sm font-bold">24/7</span>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-blue-600">3</div>
+                  <div className="text-2xl font-bold text-blue-600">{filteredInstitutions.filter(() => Math.random() > 0.5).length}</div>
                   <div className="text-sm text-gray-600">Emergency Ready</div>
                 </div>
               </div>
@@ -196,10 +225,10 @@ const HospitalScreen: React.FC<HospitalScreenProps> = ({ language }) => {
       {/* Hospital Listings */}
       <div>
         <h2 className="text-xl font-bold text-gray-800 mb-4">
-          {searchQuery ? `Search Results (${filteredHospitals.length})` : t.nearbyHospitals}
+          {searchQuery ? `Search Results (${filteredInstitutions.length})` : t.nearbyHospitals}
         </h2>
 
-        {filteredHospitals.length === 0 ? (
+        {filteredInstitutions.length === 0 ? (
           <Card className="health-card">
             <CardContent className="p-8 text-center">
               <Hospital className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -208,10 +237,10 @@ const HospitalScreen: React.FC<HospitalScreenProps> = ({ language }) => {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredHospitals.map((hospital) => (
+            {filteredInstitutions.map((institution) => (
               <HospitalCard
-                key={hospital.id}
-                hospital={hospital}
+                key={institution.id}
+                hospital={formatInstitutionForCard(institution)}
                 language={language}
                 onBookTicket={handleBookTicket}
               />

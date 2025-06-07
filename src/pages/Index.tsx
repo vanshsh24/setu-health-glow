@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
@@ -104,9 +105,8 @@ const Index = () => {
         
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header 
-            onMenuClick={handleMenuClick}
             language={language}
-            onLanguageToggle={handleLanguageToggle}
+            setLanguage={setLanguage}
           />
           
           <main className="flex-1 overflow-y-auto">

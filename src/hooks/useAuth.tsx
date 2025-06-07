@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -40,7 +39,7 @@ export const useAuth = () => {
           await fetchProfile(session.user.id);
           
           // Create profile if it doesn't exist (new user)
-          if (event === 'SIGNED_UP' || event === 'SIGNED_IN') {
+          if (event === 'SIGNED_IN') {
             setTimeout(() => {
               createProfileIfNotExists(session.user);
             }, 100);
