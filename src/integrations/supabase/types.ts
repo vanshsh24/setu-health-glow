@@ -95,6 +95,65 @@ export type Database = {
           },
         ]
       }
+      approved_institutions: {
+        Row: {
+          city: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          district: string
+          id: string
+          institution_type: Database["public"]["Enums"]["institution_type"]
+          is_active: boolean
+          location: string
+          name: string
+          registration_id: string | null
+          services_description: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          city: string
+          contact_email: string
+          contact_phone: string
+          created_at?: string
+          district: string
+          id?: string
+          institution_type: Database["public"]["Enums"]["institution_type"]
+          is_active?: boolean
+          location: string
+          name: string
+          registration_id?: string | null
+          services_description: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          city?: string
+          contact_email?: string
+          contact_phone?: string
+          created_at?: string
+          district?: string
+          id?: string
+          institution_type?: Database["public"]["Enums"]["institution_type"]
+          is_active?: boolean
+          location?: string
+          name?: string
+          registration_id?: string | null
+          services_description?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approved_institutions_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "institution_registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       doctor_availability: {
         Row: {
           day_of_week: number | null
@@ -205,6 +264,66 @@ export type Database = {
           record_type?: string | null
           title?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      institution_registrations: {
+        Row: {
+          admin_notes: string | null
+          city: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          district: string
+          id: string
+          institution_type: Database["public"]["Enums"]["institution_type"]
+          legal_document_name: string | null
+          legal_document_url: string | null
+          location: string
+          name: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          services_description: string
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          city: string
+          contact_email: string
+          contact_phone: string
+          created_at?: string
+          district: string
+          id?: string
+          institution_type: Database["public"]["Enums"]["institution_type"]
+          legal_document_name?: string | null
+          legal_document_url?: string | null
+          location: string
+          name: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          services_description: string
+          status?: Database["public"]["Enums"]["registration_status"]
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          city?: string
+          contact_email?: string
+          contact_phone?: string
+          created_at?: string
+          district?: string
+          id?: string
+          institution_type?: Database["public"]["Enums"]["institution_type"]
+          legal_document_name?: string | null
+          legal_document_url?: string | null
+          location?: string
+          name?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          services_description?: string
+          status?: Database["public"]["Enums"]["registration_status"]
+          updated_at?: string
         }
         Relationships: []
       }
@@ -506,14 +625,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "hospital" | "pathology_lab" | "user"
       appointment_mode: "online" | "physical"
       appointment_status:
         | "scheduled"
@@ -529,6 +676,7 @@ export type Database = {
         | "psychiatrist"
         | "orthopedic"
         | "gynecologist"
+      institution_type: "hospital" | "pathology_lab"
       lab_test_status:
         | "booked"
         | "sample_collected"
@@ -537,6 +685,7 @@ export type Database = {
         | "cancelled"
       payment_method: "esewa" | "khalti" | "bank_transfer" | "cash"
       payment_status: "pending" | "completed" | "failed" | "refunded"
+      registration_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -652,6 +801,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "hospital", "pathology_lab", "user"],
       appointment_mode: ["online", "physical"],
       appointment_status: [
         "scheduled",
@@ -669,6 +819,7 @@ export const Constants = {
         "orthopedic",
         "gynecologist",
       ],
+      institution_type: ["hospital", "pathology_lab"],
       lab_test_status: [
         "booked",
         "sample_collected",
@@ -678,6 +829,7 @@ export const Constants = {
       ],
       payment_method: ["esewa", "khalti", "bank_transfer", "cash"],
       payment_status: ["pending", "completed", "failed", "refunded"],
+      registration_status: ["pending", "approved", "rejected"],
     },
   },
 } as const

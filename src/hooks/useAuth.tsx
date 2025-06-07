@@ -34,9 +34,17 @@ export const useAuth = () => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
         setUser(session?.user ?? null);
         if (session?.user) {
           await fetchProfile(session.user.id);
+          
+          // Create profile if it doesn't exist (new user)
+          if (event === 'SIGNED_UP' || event === 'SIGNED_IN') {
+            setTimeout(() => {
+              createProfileIfNotExists(session.user);
+            }, 100);
+          }
         } else {
           setProfile(null);
         }
@@ -46,6 +54,35 @@ export const useAuth = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const createProfileIfNotExists = async (user: User) => {
+    try {
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!existingProfile) {
+        const { error } = await supabase
+          .from('profiles')
+          .insert([{
+            id: user.id,
+            full_name: user.user_metadata?.full_name || '',
+            preferred_language: 'en',
+          }]);
+
+        if (error) {
+          console.error('Error creating profile:', error);
+        } else {
+          console.log('Profile created for user:', user.id);
+          await fetchProfile(user.id);
+        }
+      }
+    } catch (error) {
+      console.error('Error in createProfileIfNotExists:', error);
+    }
+  };
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -71,7 +108,7 @@ export const useAuth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}/`,
         },
       });
 
